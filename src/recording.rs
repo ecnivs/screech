@@ -1,6 +1,6 @@
 use crate::error::{ApiError, Result};
 use headless_chrome::Browser;
-use headless_chrome::protocol::page::{ScreenshotFormat, Viewport};
+use headless_chrome::protocol::page::ScreenshotFormat;
 use std::path::PathBuf;
 use tempfile::TempDir;
 use uuid::Uuid;
@@ -22,7 +22,7 @@ impl RecordingService {
         duration: u32,
         _width: Option<u32>,
         _height: Option<u32>,
-    ) -> Result<String> {
+    ) -> Result<Vec<u8>> {
         if !url.starts_with("http://") && !url.starts_with("https://") {
             return Err(ApiError::InvalidUrl("URL must start with http:// or https://".to_string()));
         }
@@ -49,7 +49,15 @@ impl RecordingService {
 
         self.create_video_from_screenshots(&tab, duration, &file_path).await?;
 
-        Ok(file_path.to_string_lossy().to_string())
+        let video_data = tokio::fs::read(&file_path)
+            .await
+            .map_err(|e| ApiError::FileSystemError(format!("Failed to read video file: {}", e)))?;
+
+        tokio::fs::remove_file(&file_path)
+            .await
+            .map_err(|e| ApiError::FileSystemError(format!("Failed to cleanup video file: {}", e)))?;
+
+        Ok(video_data)
     }
 
     async fn create_video_from_screenshots(
@@ -94,7 +102,7 @@ impl RecordingService {
 
     async fn create_video_from_frames(
         &self,
-        frame_paths: &[PathBuf],
+        _frame_paths: &[PathBuf],
         output_path: &PathBuf,
         fps: u32,
     ) -> Result<()> {

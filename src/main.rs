@@ -48,7 +48,7 @@ struct ApiResponse<T> {
 struct ScreenshotResponse {
     id: String,
     url: String,
-    file_path: String,
+    image_data: String,
     timestamp: String,
 }
 
@@ -56,7 +56,7 @@ struct ScreenshotResponse {
 struct RecordingResponse {
     id: String,
     url: String,
-    file_path: String,
+    video_data: String,
     duration: u32,
     timestamp: String,
 }
@@ -76,7 +76,7 @@ async fn take_screenshot(
     let id = Uuid::new_v4().to_string();
     let timestamp = chrono::Utc::now().to_rfc3339();
 
-    let screenshot_path = state
+    let screenshot_data = state
         .screenshot_service
         .capture_screenshot(&request.url, request.width, request.height)
         .await?;
@@ -84,7 +84,7 @@ async fn take_screenshot(
     let response = ScreenshotResponse {
         id,
         url: request.url,
-        file_path: screenshot_path,
+        image_data: base64::Engine::encode(&base64::engine::general_purpose::STANDARD, screenshot_data),
         timestamp,
     };
 
@@ -102,7 +102,7 @@ async fn record_screencast(
     let id = Uuid::new_v4().to_string();
     let timestamp = chrono::Utc::now().to_rfc3339();
 
-    let recording_path = state
+    let video_data = state
         .recording_service
         .record_screencast(&request.url, request.duration, request.width, request.height)
         .await?;
@@ -110,7 +110,7 @@ async fn record_screencast(
     let response = RecordingResponse {
         id,
         url: request.url,
-        file_path: recording_path,
+        video_data: base64::Engine::encode(&base64::engine::general_purpose::STANDARD, video_data),
         duration: request.duration,
         timestamp,
     };

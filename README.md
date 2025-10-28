@@ -63,19 +63,36 @@ curl -X POST http://localhost:3000/recording \
 
 #### Response Format
 
+**Screenshot Response**
 ```json
 {
   "success": true,
   "data": {
     "id": "uuid",
     "url": "https://example.com",
-    "file_path": "/tmp/screech/file.png",
-    "timestamp": "2025-10-28T06:43:17Z",
-    "duration": 5
+    "image_data": "iVBORw0KGgoAAAANSUhEUgAA...",
+    "timestamp": "2025-10-28T06:43:17Z"
   },
   "error": null
 }
 ```
+
+**Recording Response**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "url": "https://example.com",
+    "video_data": "AAAAIGZ0eXBpc29tAAACAGlzb21pc28y...",
+    "duration": 5,
+    "timestamp": "2025-10-28T06:43:17Z"
+  },
+  "error": null
+}
+```
+
+**Note:** The `image_data` and `video_data` fields contain base64-encoded binary data that can be decoded and saved as PNG/MP4 files.
 
 **Error Example**
 
