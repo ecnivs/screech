@@ -1,6 +1,6 @@
-<h1 align="center">Screech</h1>
+<h1 align="center">Screech API</h1>
 
-<p align="center"><em>API for capturing screenshots of websites</em></p>
+<p align="center"><em>capture website screenshots</em></p>
 
 
 ## API Overview
@@ -70,7 +70,7 @@ cd screech
 cargo build --release
 ```
 
-### ChromeDriver Setup
+#### ChromeDriver Setup
 
 Download and install ChromeDriver:
 
