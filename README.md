@@ -37,7 +37,7 @@ Take a screenshot of a given URL.
 ```bash
 curl -X POST http://localhost:3000/screenshot \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://github.com","width":1920,"height":1080,"delay":2}'
+  -d '{"url":"https://github.com/ecnivs","width":1920,"height":1080,"delay":2}'
 ```
 
 **Params**
