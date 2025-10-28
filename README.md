@@ -15,13 +15,16 @@
   <img src="https://img.shields.io/github/languages/top/ecnivs/screech-api?style=flat-square">
 </p>
 
-## API Overview
+## Overview
+**Screech API** is a Rust-based service that captures screenshots of websites through a simple HTTP interface. You send it a URL, and it returns a base64-encoded PNG image of the rendered page. It’s built for speed, reliability, and easy integration into automated systems like testing pipelines, preview generators, or monitoring tools.
+
+## 🧩 API Specification
 
 #### Health Check
 
-**GET** `/health`  
-Check if the server is running.
+**GET** `/health`
 
+Check if the server is running.
 ```bash
 curl http://localhost:3000/health
 ```
@@ -31,7 +34,6 @@ curl http://localhost:3000/health
 **POST** `/screenshot`
 
 Take a screenshot of a given URL.
-
 ```bash
 curl -X POST http://localhost:3000/screenshot \
   -H "Content-Type: application/json" \
@@ -66,7 +68,6 @@ curl -X POST http://localhost:3000/screenshot \
 **Note:** The `image_data` field contains base64-encoded binary data that can be decoded and saved as PNG files.
 
 **Error Example**
-
 ```json
 {
   "success": false,
@@ -76,7 +77,6 @@ curl -X POST http://localhost:3000/screenshot \
 ```
 
 ## 📦 Installation
-
 ```bash
 git clone https://github.com/ecnivs/screech
 cd screech
@@ -86,7 +86,6 @@ cargo build --release
 #### ChromeDriver Setup
 
 Download and install ChromeDriver:
-
 ```bash
 # Download ChromeDriver (replace with your Chrome version)
 wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE
@@ -111,3 +110,20 @@ sudo pacman -S chromium
 ```
 cargo run
 ```
+
+## 💖 Support the project
+If you find this project helpful and want to support its development, donations are welcome!  
+Your support helps keep the project active and enables new features.
+<div align="center">
+  <a href="https://www.buymeacoffee.com/ecnivs" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+</div>
+
+## 🙌 Contributing
+Feel free to:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Submit a pull request
+
+#### *I'd appreciate any feedback or code reviews you might have!*
