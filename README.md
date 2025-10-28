@@ -2,6 +2,18 @@
 
 <p align="center"><em>capture screenshots of websites</em></p>
 
+<p align="center">
+  <a href="https://github.com/ecnivs/screech-api/stargazers">
+    <img src="https://img.shields.io/github/stars/ecnivs/screech-api?style=flat-square">
+  </a>
+  <a href="https://github.com/ecnivs/screech-api/issues">
+    <img src="https://img.shields.io/github/issues/ecnivs/screech-api?style=flat-square">
+  </a>
+  <a href="https://github.com/ecnivs/screech-api/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/ecnivs/screech-api?style=flat-square">
+  </a>
+  <img src="https://img.shields.io/github/languages/top/ecnivs/screech-api?style=flat-square">
+</p>
 
 ## API Overview
 
