@@ -6,6 +6,9 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::process::{Command, Stdio};
+use std::thread;
+use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::cors::CorsLayer;
 use uuid::Uuid;
@@ -75,8 +78,46 @@ async fn take_screenshot(
     }))
 }
 
+fn start_chromedriver() -> Result<()> {
+    println!("Starting ChromeDriver...");
+
+    let mut child = Command::new("chromedriver")
+        .arg("--port=9515")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| error::ApiError::IoError(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            format!("Failed to start ChromeDriver: {}", e)
+        )))?;
+
+    thread::sleep(Duration::from_secs(2));
+
+    match child.try_wait() {
+        Ok(Some(status)) => {
+            return Err(error::ApiError::BrowserError(format!(
+                "ChromeDriver exited early with status: {:?}", status
+            )));
+        }
+        Ok(None) => {
+            println!("ChromeDriver started successfully on port 9515");
+        }
+        Err(e) => {
+            return Err(error::ApiError::BrowserError(format!(
+                "Failed to check ChromeDriver status: {}", e
+            )));
+        }
+    }
+
+    std::mem::forget(child);
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
+    start_chromedriver()?;
+
     let screenshot_service = Arc::new(screenshot::ScreenshotService::new());
 
     let app_state = AppState {
