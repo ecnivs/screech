@@ -29,6 +29,7 @@ struct ScreenshotRequest {
     url: String,
     width: Option<u32>,
     height: Option<u32>,
+    delay: Option<f64>,
 }
 
 impl ScreenshotRequest {
@@ -46,6 +47,12 @@ impl ScreenshotRequest {
         if let Some(height) = self.height {
             if height < 100 || height > 4096 {
                 return Err(error::ApiError::InvalidRequest("Height must be between 100 and 4096 pixels".to_string()));
+            }
+        }
+
+        if let Some(delay) = self.delay {
+            if delay < 0.0 || delay > 60.0 {
+                return Err(error::ApiError::InvalidRequest("Delay must be between 0 and 60 seconds".to_string()));
             }
         }
 
@@ -91,7 +98,7 @@ async fn take_screenshot(
 
     let screenshot_data = state
         .screenshot_service
-        .capture_screenshot(&request.url, request.width, request.height)
+        .capture_screenshot(&request.url, request.width, request.height, request.delay)
         .await?;
 
     let response = ScreenshotResponse {

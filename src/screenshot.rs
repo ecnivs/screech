@@ -15,6 +15,7 @@ impl ScreenshotService {
         url: &str,
         width: Option<u32>,
         height: Option<u32>,
+        delay: Option<f64>,
     ) -> Result<Vec<u8>> {
         if !url.starts_with("http://") && !url.starts_with("https://") {
             return Err(ApiError::InvalidUrl("URL must start with http:// or https://".to_string()));
@@ -68,12 +69,15 @@ impl ScreenshotService {
         .map_err(|_| ApiError::BrowserTimeout("Navigation timeout".to_string()))?
         .map_err(|e| ApiError::ScreenshotError(format!("Failed to navigate to URL: {}", e)))?;
 
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        let delay_seconds = delay.unwrap_or(2.0);
         timeout(
-            Duration::from_secs(5),
-            tokio::time::sleep(Duration::from_secs(2))
+            Duration::from_secs((delay_seconds + 5.0) as u64),
+            tokio::time::sleep(Duration::from_secs_f64(delay_seconds))
         )
         .await
-        .map_err(|_| ApiError::RequestTimeout("Page load timeout".to_string()))?;
+        .map_err(|_| ApiError::RequestTimeout("Delay timeout".to_string()))?;
 
         let temp_file = tempfile::NamedTempFile::new()
             .map_err(|e| ApiError::FileSystemError(format!("Failed to create temp file: {}", e)))?;

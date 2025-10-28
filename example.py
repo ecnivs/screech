@@ -34,11 +34,12 @@ def take_screenshot(
     url: str,
     width: int = DEFAULT_VIEWPORT["width"],
     height: int = DEFAULT_VIEWPORT["height"],
+    delay: float = 2,
     save_to_file: bool = True,
 ) -> Dict[str, Any]:
     print(f"Taking screenshot of {url}...")
 
-    payload = {"url": url, "width": width, "height": height}
+    payload = {"url": url, "width": width, "height": height, "delay": delay}
 
     try:
         response = requests.post(
@@ -110,6 +111,8 @@ Examples:
   python example.py --url https://example.com
   python example.py --no-save
   python example.py --width 1280 --height 720
+  python example.py --delay 5
+  python example.py --url https://example.com --delay 0
         """,
     )
     parser.add_argument(
@@ -130,6 +133,12 @@ Examples:
         default=DEFAULT_VIEWPORT["height"],
         help=f"Viewport height (default: {DEFAULT_VIEWPORT['height']})",
     )
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=2,
+        help="Delay in seconds before taking screenshot (default: 2, max: 60, supports decimals)",
+    )
 
     args = parser.parse_args()
 
@@ -138,6 +147,7 @@ Examples:
     print(f"Save to files: {not args.no_save}")
     print(f"Target URL: {args.url}")
     print(f"Viewport: {args.width}x{args.height}")
+    print(f"Delay: {args.delay} seconds")
     print()
 
     if not test_health():
@@ -147,7 +157,11 @@ Examples:
     print("🖼️  SCREENSHOT EXAMPLE")
     print("-" * 30)
     screenshot_result = take_screenshot(
-        args.url, width=args.width, height=args.height, save_to_file=not args.no_save
+        args.url,
+        width=args.width,
+        height=args.height,
+        delay=args.delay,
+        save_to_file=not args.no_save,
     )
 
     if screenshot_result.get("success"):

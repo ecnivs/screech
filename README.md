@@ -23,15 +23,16 @@ Take a screenshot of a given URL.
 ```bash
 curl -X POST http://localhost:3000/screenshot \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://github.com","width":1920,"height":1080}'
+  -d '{"url":"https://github.com","width":1920,"height":1080,"delay":2}'
 ```
 
 **Params**
 | Field | Type | Required | Description |
 |--------|------|-----------|-------------|
 | `url` | string | Yes | Website URL |
-| `width` | number | No | Viewport width |
-| `height` | number | No | Viewport height |
+| `width` | number | No | Viewport width (100-4096) |
+| `height` | number | No | Viewport height (100-4096) |
+| `delay` | number | No | Delay in seconds before screenshot (0-60, default: 2) |
 
 
 #### Response Format
