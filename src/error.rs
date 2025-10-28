@@ -23,11 +23,11 @@ pub enum ApiError {
     #[error("File system error: {0}")]
     FileSystemError(String),
 
-    #[error("Internal server error: {0}")]
-    InternalError(String),
-
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
+
+    #[error("WebDriver error: {0}")]
+    WebDriverError(#[from] thirtyfour::error::WebDriverError),
 }
 
 #[derive(Serialize)]

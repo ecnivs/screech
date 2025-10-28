@@ -141,12 +141,14 @@ async fn main() -> Result<()> {
                 .layer(CorsLayer::permissive())
         )
         .with_state(app_state);
+
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await
-        .map_err(|e| error::ApiError::IoError(e))?;
+        .map_err(error::ApiError::IoError)?;
+
     println!("Screech API server running on http://0.0.0.0:3000");
 
     axum::serve(listener, app).await
-        .map_err(|e| error::ApiError::IoError(e))?;
+        .map_err(error::ApiError::IoError)?;
 
     Ok(())
 }

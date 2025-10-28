@@ -7,7 +7,8 @@
 
 - **Rust** (latest stable)
 - **Google Chrome / Chromium**
-- **FFmpeg**
+- **ChromeDriver** (for Selenium WebDriver)
+- **FFmpeg** (for video recording)
 
 ## API Overview
 
@@ -110,6 +111,30 @@ curl -X POST http://localhost:3000/recording \
 git clone https://github.com/ecnivs/screech
 cd screech
 cargo build --release
+```
+
+### ChromeDriver Setup
+
+Download and install ChromeDriver:
+
+```bash
+# Download ChromeDriver (replace with your Chrome version)
+wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+CHROME_VERSION=$(cat LATEST_RELEASE)
+wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+sudo mv chromedriver /usr/local/bin/
+sudo chmod +x /usr/local/bin/chromedriver
+```
+
+Or use package manager:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install chromium-chromedriver
+
+# Arch Linux
+sudo pacman -S chromium
 ```
 
 ## 🚀 Running Screech
