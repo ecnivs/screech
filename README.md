@@ -1,6 +1,6 @@
 <h1 align="center">Screech API</h1>
 
-<p align="center"><em>capture website screenshots</em></p>
+<p align="center"><em>capture screenshots of websites</em></p>
 
 
 ## API Overview
