@@ -10,7 +10,9 @@ import requests
 
 API_BASE_URL = "http://localhost:3000"
 DEFAULT_VIEWPORT = {"width": 1920, "height": 1080}
-DEFAULT_URL = "https://giphy.com/gifs/rickroll-rick-astley-never-gonna-give-you-up-Vuw9m5wXviFIQ"
+DEFAULT_URL = (
+    "https://giphy.com/gifs/rickroll-rick-astley-never-gonna-give-you-up-Vuw9m5wXviFIQ"
+)
 
 
 def test_health() -> bool:
@@ -69,8 +71,6 @@ def take_screenshot(
         return {"success": False, "error": str(e)}
 
 
-
-
 def save_image_to_file(api_data: Dict[str, Any], file_type: str) -> bool:
     try:
         os.makedirs("downloads", exist_ok=True)
@@ -88,8 +88,6 @@ def save_image_to_file(api_data: Dict[str, Any], file_type: str) -> bool:
     except Exception as e:
         print(f"❌ Error saving image: {e}")
         return False
-
-
 
 
 def demonstrate_data_usage(api_data: Dict[str, Any]) -> None:
@@ -114,7 +112,9 @@ Examples:
   python example.py --width 1280 --height 720
         """,
     )
-    parser.add_argument("--no-save", action="store_true", help="Don't save files locally")
+    parser.add_argument(
+        "--no-save", action="store_true", help="Don't save files locally"
+    )
     parser.add_argument(
         "--url", default=DEFAULT_URL, help=f"URL to capture (default: {DEFAULT_URL})"
     )
@@ -153,7 +153,6 @@ Examples:
     if screenshot_result.get("success"):
         demonstrate_data_usage(screenshot_result["data"])
 
-
     print("✅ Examples completed!")
 
     if not args.no_save:
@@ -165,4 +164,3 @@ Examples:
 
 if __name__ == "__main__":
     main()
-
