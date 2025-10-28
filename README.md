@@ -107,7 +107,7 @@ curl -X POST http://localhost:3000/recording \
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/yourusername/screech
+git clone https://github.com/ecnivs/screech
 cd screech
 cargo build --release
 ```
