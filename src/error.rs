@@ -11,9 +11,6 @@ pub enum ApiError {
     #[error("Screenshot capture failed: {0}")]
     ScreenshotError(String),
 
-    #[error("Recording failed: {0}")]
-    RecordingError(String),
-
     #[error("Invalid URL: {0}")]
     InvalidUrl(String),
 
@@ -40,7 +37,7 @@ impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
             ApiError::InvalidUrl(_) => (StatusCode::BAD_REQUEST, self.to_string()),
-            ApiError::ScreenshotError(_) | ApiError::RecordingError(_) => {
+            ApiError::ScreenshotError(_) => {
                 (StatusCode::UNPROCESSABLE_ENTITY, self.to_string())
             }
             _ => (StatusCode::INTERNAL_SERVER_ERROR, self.to_string()),

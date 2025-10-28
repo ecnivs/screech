@@ -10,7 +10,6 @@ import requests
 
 API_BASE_URL = "http://localhost:3000"
 DEFAULT_VIEWPORT = {"width": 1920, "height": 1080}
-DEFAULT_DURATION = 5
 DEFAULT_URL = "https://giphy.com/gifs/rickroll-rick-astley-never-gonna-give-you-up-Vuw9m5wXviFIQ"
 
 
@@ -70,47 +69,6 @@ def take_screenshot(
         return {"success": False, "error": str(e)}
 
 
-def record_screencast(
-    url: str,
-    duration: int,
-    width: int = DEFAULT_VIEWPORT["width"],
-    height: int = DEFAULT_VIEWPORT["height"],
-    save_to_file: bool = True,
-) -> Dict[str, Any]:
-    print(f"Recording {duration}s screencast of {url}...")
-
-    payload = {"url": url, "duration": duration, "width": width, "height": height}
-
-    try:
-        response = requests.post(
-            f"{API_BASE_URL}/recording",
-            headers={"Content-Type": "application/json"},
-            data=json.dumps(payload),
-            timeout=duration + 30,
-        )
-        response.raise_for_status()
-
-        print(f"Status: {response.status_code}")
-        result = response.json()
-
-        if result["success"]:
-            print(f"API Response - Recording ID: {result['data']['id']}")
-            print(f"Video data size: {len(result['data']['video_data'])} characters")
-            print(f"Duration: {result['data']['duration']}s")
-            print(f"Timestamp: {result['data']['timestamp']}")
-
-            if save_to_file:
-                save_video_to_file(result["data"], "recording")
-        else:
-            print(f"Error: {result['error']}")
-
-        print()
-        return result
-
-    except requests.RequestException as e:
-        print(f"❌ Recording request failed: {e}")
-        print()
-        return {"success": False, "error": str(e)}
 
 
 def save_image_to_file(api_data: Dict[str, Any], file_type: str) -> bool:
@@ -132,35 +90,14 @@ def save_image_to_file(api_data: Dict[str, Any], file_type: str) -> bool:
         return False
 
 
-def save_video_to_file(api_data: Dict[str, Any], file_type: str) -> bool:
-    try:
-        os.makedirs("downloads", exist_ok=True)
-
-        local_filename = f"{file_type}_{api_data['id']}.mp4"
-        local_path = os.path.join("downloads", local_filename)
-
-        video_data = base64.b64decode(api_data["video_data"])
-        with open(local_path, "wb") as f:
-            f.write(video_data)
-
-        print(f"✅ Saved video to: {local_path}")
-        print(f"   File size: {os.path.getsize(local_path)} bytes")
-        return True
-    except Exception as e:
-        print(f"❌ Error saving video: {e}")
-        return False
 
 
-def demonstrate_data_usage(api_data: Dict[str, Any], file_type: str) -> None:
-    print(f"📊 API Data Usage Example for {file_type}:")
+def demonstrate_data_usage(api_data: Dict[str, Any]) -> None:
+    print(f"📊 API Data Usage Example:")
     print(f"   ID: {api_data['id']}")
     print(f"   URL: {api_data['url']}")
     print(f"   Timestamp: {api_data['timestamp']}")
-    if file_type == "recording":
-        print(f"   Duration: {api_data['duration']}s")
-
-    data_field = "image_data" if file_type == "screenshot" else "video_data"
-    data_size = len(api_data[data_field])
+    data_size = len(api_data["image_data"])
     print(f"   Data size: {data_size} characters (base64)")
     print(f"   Binary size: ~{data_size * 3 // 4} bytes")
     print()
@@ -173,19 +110,13 @@ def main() -> None:
         epilog="""
 Examples:
   python example.py --url https://example.com
-  python example.py --no-save --duration 10
+  python example.py --no-save
   python example.py --width 1280 --height 720
         """,
     )
     parser.add_argument("--no-save", action="store_true", help="Don't save files locally")
     parser.add_argument(
         "--url", default=DEFAULT_URL, help=f"URL to capture (default: {DEFAULT_URL})"
-    )
-    parser.add_argument(
-        "--duration",
-        type=int,
-        default=DEFAULT_DURATION,
-        help=f"Recording duration in seconds (default: {DEFAULT_DURATION})",
     )
     parser.add_argument(
         "--width",
@@ -206,7 +137,6 @@ Examples:
     print("=" * 50)
     print(f"Save to files: {not args.no_save}")
     print(f"Target URL: {args.url}")
-    print(f"Recording duration: {args.duration}s")
     print(f"Viewport: {args.width}x{args.height}")
     print()
 
@@ -221,20 +151,8 @@ Examples:
     )
 
     if screenshot_result.get("success"):
-        demonstrate_data_usage(screenshot_result["data"], "screenshot")
+        demonstrate_data_usage(screenshot_result["data"])
 
-    print("🎥 RECORDING EXAMPLE")
-    print("-" * 30)
-    recording_result = record_screencast(
-        args.url,
-        args.duration,
-        width=args.width,
-        height=args.height,
-        save_to_file=not args.no_save,
-    )
-
-    if recording_result.get("success"):
-        demonstrate_data_usage(recording_result["data"], "recording")
 
     print("✅ Examples completed!")
 

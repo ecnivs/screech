@@ -42,7 +42,6 @@ impl ScreenshotService {
             .map_err(|e| ApiError::FileSystemError(format!("Failed to create temp file: {}", e)))?;
         
         let temp_path = temp_file.path();
-        
         driver.screenshot(temp_path)
             .await
             .map_err(|e| ApiError::ScreenshotError(format!("Failed to capture screenshot: {}", e)))?;
